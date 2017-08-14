@@ -30,7 +30,7 @@ jobs:
             . venv/bin/activate
             python -m unittest
 
-      - pylint:
+      - run:
           name: run pylint
           command: |
             . venv/bin/activate
