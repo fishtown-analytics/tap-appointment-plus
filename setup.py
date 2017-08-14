@@ -10,6 +10,7 @@ setup(name='tap-appointment-plus',
       classifiers=['Programming Language :: Python :: 3 :: Only'],
       py_modules=['tap_appointment_plus'],
       install_requires=[
+          'funcy>=1.8',
           'singer-python>=1.5.0',
           'voluptuous>=0.10.5',
           'requests>=2.18.3',
