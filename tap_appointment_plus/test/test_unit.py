@@ -5,18 +5,19 @@ import tap_appointment_plus
 import tap_appointment_plus.config
 
 
+def generate_config():
+    return {
+        'site_id': 'abc',
+        'api_key': 'def',
+        'start_date': '2017-01-01T00:00:00Z',
+        'user_agent': 'test <test@fishtownanalytics.com>'
+    }
+
+
 class TestUnit(unittest.TestCase):
 
-    def generate_config(self):
-        return {
-            'site_id': 'abc',
-            'api_key': 'def',
-            'start_date': '2017-01-01T00:00:00Z',
-            'user_agent': 'test <test@fishtownanalytics.com>'
-        }
-
     def test__build_request(self):
-        config = self.generate_config()
+        config = generate_config()
 
         self.assertEqual(
             tap_appointment_plus.build_request(config),

@@ -1,10 +1,10 @@
 import argparse
+from base64 import b64encode
+from datetime import datetime
+
 import requests
 import requests.auth
 import singer
-
-from base64 import b64encode
-from datetime import datetime
 from funcy import partial
 
 import tap_appointment_plus.config
@@ -16,10 +16,10 @@ BASE_URL = 'https://ws.appointment-plus.com/'
 
 
 def build_request(config):
-    auth_header = 'Basic ' + b64encode(b':'.join([
+    to_encode = b':'.join([
         config['site_id'].encode('latin1'),
         config['api_key'].encode('latin1')])
-    ).decode('ascii')
+    auth_header = 'Basic ' + b64encode(to_encode).decode('ascii')
 
     return {
         'data': {'response_type': 'json'},
@@ -34,8 +34,8 @@ def _make_request(url_path, request_dict):
         **request_dict)
 
 
-def _process_iso_date(d):
-    return datetime.strptime(d, '%Y-%m-%dT%H:%M:%SZ')
+def _process_iso_date(date_string):
+    return datetime.strptime(date_string, '%Y-%m-%dT%H:%M:%SZ')
 
 
 def sync_appointments(endpoint, config):
@@ -85,7 +85,10 @@ def sync_staff(endpoint, config):
         {'show_deleted': 'yes'})
 
 
-def sync_endpoint(endpoint, config, params={}):
+def sync_endpoint(endpoint, config, params=None):
+    if params is None:
+        params = {}
+
     table_name = endpoint['name']
 
     logger.info("Syncing data from object '{}'.".format(endpoint['url']))
@@ -108,76 +111,76 @@ def sync_endpoint(endpoint, config, params={}):
     return result
 
 
-endpoints = [
+ENDPOINTS = [
     {'name': 'appointments',
      'url': 'Appointments/GetAppointments',
-     'schema': schemas.appointments,
+     'schema': schemas.APPOINTMENTS,
      'key_properties': ['appt_id'],
      'sync_fn': sync_appointments},
 
     {'name': 'coupons',
      'url': 'POS/GetCoupons',
-     'schema': schemas.coupons,
+     'schema': schemas.COUPONS,
      'key_properties': ['coupon_id'],
      'sync_fn': sync_endpoint},
 
     {'name': 'custom_fields',
      'url': 'CustomFields/GetCustomFields',
-     'schema': schemas.custom_fields,
+     'schema': schemas.CUSTOM_FIELDS,
      'key_properties': ['id', 'c_id', 'field_name'],
      'sync_fn': sync_endpoint},
 
     {'name': 'customers',
      'url': 'Customers/GetCustomers',
-     'schema': schemas.customers,
+     'schema': schemas.CUSTOMERS,
      'key_properties': ['customer_id'],
      'sync_fn': sync_customers},
 
     {'name': 'customer_packages',
      'url': 'Customers/GetPackages',
-     'schema': schemas.customer_packages,
+     'schema': schemas.CUSTOMER_PACKAGES,
      'key_properties': ['customer_package_id'],
      'sync_fn': sync_endpoint},
 
     {'name': 'events',
      'url': 'Events/GetEvents',
-     'schema': schemas.events,
+     'schema': schemas.EVENTS,
      'key_properties': ['c_id', 'service_id', 'event_template_id'],
      'sync_fn': sync_events},
 
     {'name': 'locations',
      'url': 'Locations/GetLocations',
-     'schema': schemas.locations,
+     'schema': schemas.LOCATIONS,
      'key_properties': ['location_id'],
      'sync_fn': sync_endpoint},
 
     {'name': 'packages',
      'url': 'Packages/GetPackages',
-     'schema': schemas.packages,
+     'schema': schemas.PACKAGES,
      'key_properties': ['c_id', 'item_id', 'package_type_id'],
      'sync_fn': sync_endpoint},
 
     {'name': 'payment_types',
      'url': 'Payments/GetPaymentTypes',
-     'schema': schemas.payment_types,
+     'schema': schemas.PAYMENT_TYPES,
      'key_properties': ['payment_type_id'],
      'sync_fn': sync_endpoint},
 
     {'name': 'rooms',
      'url': 'Rooms/GetRooms',
-     'schema': schemas.rooms,
+     'schema': schemas.ROOMS,
      'key_properties': ['c_id', 'room_id'],
      'sync_fn': sync_endpoint},
 
     {'name': 'services',
      'url': 'Services/GetServices',
-     'schema': schemas.services,
+     'schema': schemas.SERVICES,
      'key_properties': ['c_id', 'service_id'],
      'sync_fn': sync_endpoint},
 
     {'name': 'staff',
      'url': 'Staff/GetStaff',
-     'schema': schemas.staff,
+     'schema': schemas.STAFF,
      'key_properties': ['c_id', 'employee_id'],
      'sync_fn': sync_staff},
 ]
@@ -188,7 +191,7 @@ def do_sync(args):
 
     config = tap_appointment_plus.config.load(args.config)
 
-    for endpoint in endpoints:
+    for endpoint in ENDPOINTS:
         endpoint['sync_fn'](endpoint, config)
 
     logger.info('Done.')

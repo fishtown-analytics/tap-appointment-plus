@@ -1,4 +1,4 @@
-appointments = {
+APPOINTMENTS = {
     "type": ["null", "object"],
     "properties": {
         "c_id": {
@@ -145,11 +145,11 @@ appointments = {
     }
 }
 
-coupons = {}
-customer_packages = {}
-custom_fields = {}
+COUPONS = {}
+CUSTOMER_PACKAGES = {}
+CUSTOM_FIELDS = {}
 
-customers = {
+CUSTOMERS = {
     "type": ["null", "object"],
     "properties": {
         "c_id": {
@@ -364,9 +364,9 @@ customers = {
     }
 }
 
-events = {}
+EVENTS = {}
 
-locations = {
+LOCATIONS = {
     "type": ["null", "object"],
     "properties": {
         "headquarters": {
@@ -456,9 +456,9 @@ locations = {
     }
 }
 
-packages = {}
+PACKAGES = {}
 
-payment_types = {
+PAYMENT_TYPES = {
     "type": ["null", "object"],
     "properties": {
         "payment_type_id": {
@@ -485,9 +485,9 @@ payment_types = {
     }
 }
 
-rooms = {}
+ROOMS = {}
 
-services = {
+SERVICES = {
     "type": ["null", "object"],
     "properties": {
         "c_id": {
@@ -586,7 +586,7 @@ services = {
     }
 }
 
-staff = {
+STAFF = {
     "type": ["null", "object"],
     "properties": {
         "c_id": {
