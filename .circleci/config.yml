@@ -9,7 +9,7 @@ jobs:
 
       - restore_cache:
           keys:
-          - v1-dependencies-{{ checksum "requirements.txt" }}
+          - v1-dependencies-{{ checksum "setup.py" }}
 
       - run:
           name: install dependencies
@@ -21,7 +21,7 @@ jobs:
       - save_cache:
           paths:
             - ./venv
-          key: v1-dependencies-{{ checksum "requirements.txt" }}
+          key: v1-dependencies-{{ checksum "setup.py" }}
 
       # run tests!
       - run:
@@ -34,6 +34,7 @@ jobs:
           name: run pylint
           command: |
             . venv/bin/activate
+            pip install pylint
             pylint tap_appointment_plus -d missing-docstring -d logging-format-interpolation -d too-many-locals -d too-many-arguments
 
       - store_artifacts:
