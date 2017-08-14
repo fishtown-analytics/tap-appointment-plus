@@ -23,7 +23,8 @@ def build_request(config):
 
     return {
         'data': {'response_type': 'json'},
-        'headers': {'Authorization': auth_header}
+        'headers': {'Authorization': auth_header,
+                    'User-Agent': config['user_agent']}
     }
 
 

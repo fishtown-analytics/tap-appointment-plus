@@ -20,8 +20,8 @@ class TestUnit(unittest.TestCase):
 
         self.assertEqual(
             tap_appointment_plus.build_request(config),
-            {'data': 'response_type=json',
-             'headers': {'Authorization': 'Basic abc:def',
+            {'data': {'response_type': 'json'},
+             'headers': {'Authorization': 'Basic YWJjOmRlZg==',
                          'User-Agent': 'test <test@fishtownanalytics.com>'}})
 
     def test__validate_config(self):
